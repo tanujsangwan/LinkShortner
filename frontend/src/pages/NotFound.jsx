@@ -1,45 +1,37 @@
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Home } from 'lucide-react';
 
-export default function NotFound() {
+const NotFound = () => {
   return (
-    <div className="min-h-[calc(100vh-4rem)] flex flex-col items-center justify-center px-4 relative overflow-hidden">
-      {/* Background elements */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <motion.div
-          animate={{ scale: [1, 1.1, 1], opacity: [0.3, 0.5, 0.3] }}
-          transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
-          className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-purple-600/20 rounded-full blur-[120px]"
-        />
-      </div>
-
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="text-center z-10 glass-card p-12 max-w-lg w-full"
+    <div className="min-h-screen bg-brute-bg flex flex-col justify-center items-center px-6 text-center">
+      <motion.h1 
+        initial={{ y: -50, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ type: 'spring', bounce: 0.6 }}
+        className="text-[8rem] md:text-[12rem] font-black text-brute-yellow drop-shadow-[8px_8px_0px_#000] leading-none mb-4"
       >
-        <motion.h1 
-          initial={{ scale: 0.8 }}
-          animate={{ scale: 1 }}
-          transition={{ type: "spring", stiffness: 200, damping: 10 }}
-          className="text-8xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-cyan-400 mb-4"
-        >
-          404
-        </motion.h1>
-        <h2 className="text-2xl font-bold text-white mb-4">Page not found</h2>
-        <p className="text-slate-400 mb-8">
-          The link you clicked may be broken or the page may have been removed.
-        </p>
-        
-        <Link 
-          to="/" 
-          className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500 text-white rounded-xl font-medium transition-all shadow-lg shadow-purple-500/25"
-        >
-          <Home className="w-5 h-5 mr-2" />
-          Back to Home
+        404.
+      </motion.h1>
+      <motion.p 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.2 }}
+        className="text-2xl md:text-4xl font-bold text-white uppercase tracking-wider mb-10"
+      >
+        This link doesn't exist.
+      </motion.p>
+      <motion.div
+        initial={{ scale: 0.8, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        transition={{ delay: 0.4, type: 'spring', bounce: 0.5 }}
+      >
+        <Link to="/" className="brute-btn-pink text-xl px-10 py-5">
+          GO HOME
         </Link>
       </motion.div>
     </div>
   );
-}
+};
+
+export default NotFound;

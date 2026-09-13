@@ -4,36 +4,56 @@
 
 @layer base {
   body {
-    @apply bg-slate-950 text-white font-sans antialiased;
-    overflow-x: hidden;
-  }
-}
-
-@layer utilities {
-  .glass-card {
-    @apply bg-white/5 backdrop-blur-lg border border-white/10 rounded-2xl;
+    @apply bg-brute-bg text-white font-sans;
   }
   
-  .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-purple-500 to-cyan-500;
+  ::selection {
+    @apply bg-brute-yellow text-brute-black;
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-brute-bg;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-brute-black border border-brute-bg rounded;
   }
 }
 
-/* Custom Scrollbar */
-::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
-}
+@layer components {
+  .brute-card {
+    @apply border-[3px] border-black bg-[#FFFBF0] text-black shadow-[6px_6px_0px_0px_#000];
+  }
 
-::-webkit-scrollbar-track {
-  background: #020617; 
-}
+  .brute-input {
+    @apply border-[3px] border-black bg-white text-black px-4 py-3 outline-none w-full font-semibold placeholder:text-gray-400 focus:shadow-[inset_3px_3px_0px_0px_#000] transition-shadow;
+  }
 
-::-webkit-scrollbar-thumb {
-  background: #334155; 
-  border-radius: 4px;
-}
+  .brute-btn {
+    @apply inline-flex items-center justify-center border-[3px] border-black font-bold uppercase tracking-widest px-6 py-3 transition-all duration-100 shadow-[4px_4px_0px_0px_#000] hover:translate-x-[3px] hover:translate-y-[3px] hover:shadow-none active:translate-x-[4px] active:translate-y-[4px] active:shadow-none;
+  }
 
-::-webkit-scrollbar-thumb:hover {
-  background: #475569; 
+  .brute-btn-yellow {
+    @apply brute-btn bg-[#FFE500] text-black;
+  }
+
+  .brute-btn-pink {
+    @apply brute-btn bg-[#FF3366] text-white;
+  }
+
+  .brute-btn-cyan {
+    @apply brute-btn bg-[#00D4FF] text-black;
+  }
+
+  .brute-btn-lime {
+    @apply brute-btn bg-[#00FF88] text-black;
+  }
+
+  .brute-badge {
+    @apply inline-block border-[3px] border-black font-bold uppercase text-sm px-3 py-1 shadow-[3px_3px_0px_0px_#000];
+  }
 }

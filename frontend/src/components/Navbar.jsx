@@ -1,54 +1,41 @@
+import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Zap } from 'lucide-react';
 
-export default function Navbar() {
+const Navbar = () => {
   const location = useLocation();
 
-  const navLinks = [
-    { name: 'Home', path: '/' },
-    { name: 'Dashboard', path: '/dashboard' },
-  ];
+  const isActive = (path) => {
+    return location.pathname === path;
+  };
 
   return (
-    <motion.nav 
+    <motion.nav
       initial={{ y: -100 }}
       animate={{ y: 0 }}
-      className="fixed top-0 w-full z-50 bg-slate-950/50 backdrop-blur-md border-b border-white/10"
+      transition={{ type: 'spring', stiffness: 300, damping: 20 }}
+      className="sticky top-0 z-50 bg-[#FFE500] border-b-[3px] border-black px-6 py-4 flex items-center justify-between"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
-          <Link to="/" className="flex items-center space-x-2 group">
-            <motion.div
-              whileHover={{ rotate: 15, scale: 1.1 }}
-              transition={{ type: "spring", stiffness: 300 }}
-            >
-              <Zap className="w-6 h-6 text-purple-500" fill="currentColor" />
-            </motion.div>
-            <span className="text-xl font-bold text-gradient">LinkShifter</span>
-          </Link>
-          
-          <div className="flex space-x-8">
-            {navLinks.map((link) => (
-              <Link
-                key={link.name}
-                to={link.path}
-                className="relative px-3 py-2 text-sm font-medium transition-colors hover:text-white text-slate-300"
-              >
-                {link.name}
-                {location.pathname === link.path && (
-                  <motion.div
-                    layoutId="navbar-indicator"
-                    className="absolute bottom-0 left-0 right-0 h-0.5 bg-gradient-to-r from-purple-500 to-cyan-500"
-                    initial={false}
-                    transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-                  />
-                )}
-              </Link>
-            ))}
-          </div>
-        </div>
+      <Link to="/" className="inline-block border-[3px] border-black bg-white px-3 py-1 shadow-[3px_3px_0px_0px_#000] hover:translate-x-[2px] hover:translate-y-[2px] hover:shadow-[1px_1px_0px_0px_#000] transition-all">
+        <span className="font-black text-black uppercase tracking-wider text-xl">⚡ LinkShifter</span>
+      </Link>
+      
+      <div className="flex items-center space-x-6">
+        <Link 
+          to="/" 
+          className={`font-bold text-black uppercase tracking-widest text-sm transition-all ${isActive('/') ? 'bg-black text-white px-3 py-1 border-[3px] border-black' : 'hover:border-b-[3px] hover:border-black py-1'}`}
+        >
+          Home
+        </Link>
+        <Link 
+          to="/dashboard" 
+          className={`font-bold text-black uppercase tracking-widest text-sm transition-all ${isActive('/dashboard') ? 'bg-black text-white px-3 py-1 border-[3px] border-black' : 'hover:border-b-[3px] hover:border-black py-1'}`}
+        >
+          Dashboard
+        </Link>
       </div>
     </motion.nav>
   );
-}
+};
+
+export default Navbar;
