@@ -10,7 +10,7 @@ import {
   ResponsiveContainer, PieChart, Pie, Cell, BarChart, Bar 
 } from 'recharts';
 import toast from 'react-hot-toast';
-import { getAnalytics } from '../lib/api';
+import { getAnalytics, getShortUrl } from '../lib/api';
 
 const COLORS = ['#8b5cf6', '#06b6d4', '#ec4899', '#10b981', '#f59e0b'];
 
@@ -39,7 +39,7 @@ export default function Analytics() {
 
   const handleCopy = () => {
     if (data) {
-      navigator.clipboard.writeText(`http://localhost:8080/${data.alias}`);
+      navigator.clipboard.writeText(getShortUrl(data.alias));
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
       toast.success('Copied!');
@@ -67,13 +67,15 @@ export default function Analytics() {
     );
   }
 
-  // Format data for charts
-  const clicksOverTime = data.clicksByDate || [];
-  const deviceData = Object.entries(data.devices || {}).map(([name, value]) => ({ name, value }));
-  const browserData = Object.entries(data.browsers || {}).map(([name, value]) => ({ name, value }));
-  const osData = Object.entries(data.os || {}).map(([name, value]) => ({ name, value }));
-  const topCountries = Object.entries(data.countries || {}).sort((a,b) => b[1] - a[1]).slice(0,5);
-  const topReferrers = Object.entries(data.referrers || {}).sort((a,b) => b[1] - a[1]).slice(0,5);
+  // Format data for charts — handle both camelCase key names from backend
+  const clicksOverTime = Object.entries(data.clicksByDay || {})
+    .sort(([a], [b]) => a.localeCompare(b))
+    .map(([date, clicks]) => ({ date, clicks }));
+  const deviceData = Object.entries(data.deviceBreakdown || {}).map(([name, value]) => ({ name, value }));
+  const browserData = Object.entries(data.browserBreakdown || {}).map(([name, value]) => ({ name, value }));
+  const osData = Object.entries(data.osBreakdown || {}).map(([name, value]) => ({ name, value }));
+  const topCountries = Object.entries(data.countryBreakdown || {}).sort((a,b) => b[1] - a[1]).slice(0,5);
+  const topReferrers = Object.entries(data.referrerBreakdown || {}).sort((a,b) => b[1] - a[1]).slice(0,5);
 
   const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload && payload.length) {
@@ -113,10 +115,10 @@ export default function Analytics() {
           <div className="flex-1 md:text-right">
             <h3 className="text-slate-400 text-sm mb-1 font-medium">Short URL</h3>
             <div className="flex items-center md:justify-end space-x-2">
-              <a href={`http://localhost:8080/${data.alias}`} target="_blank" rel="noreferrer" className="text-cyan-400 font-medium hover:underline">
-                localhost:8080/{data.alias}
+              <a href={getShortUrl(data.alias)} target="_blank" rel="noreferrer" className="text-cyan-400 font-medium hover:underline truncate">
+                {getShortUrl(data.alias)}
               </a>
-              <button onClick={handleCopy} className="p-1.5 text-slate-400 hover:text-white bg-slate-800 rounded-md">
+              <button onClick={handleCopy} className="p-1.5 text-slate-400 hover:text-white bg-slate-800 rounded-md flex-shrink-0">
                 {copied ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
               </button>
             </div>
@@ -247,9 +249,9 @@ export default function Analytics() {
                   <tr><th className="px-4 py-3">Source</th><th className="px-4 py-3 text-right">Clicks</th></tr>
                 </thead>
                 <tbody>
-                  {topReferrers.map(([name, count], i) => (
+                  {topReferrers.map(([name, count]) => (
                     <tr key={name} className="border-b border-slate-800/50 hover:bg-slate-800/30">
-                      <td className="px-4 py-3 font-medium">{name}</td>
+                      <td className="px-4 py-3 font-medium truncate max-w-[200px]">{name}</td>
                       <td className="px-4 py-3 text-right">{count}</td>
                     </tr>
                   ))}
@@ -270,7 +272,7 @@ export default function Analytics() {
                   <tr><th className="px-4 py-3">Country</th><th className="px-4 py-3 text-right">Clicks</th></tr>
                 </thead>
                 <tbody>
-                  {topCountries.map(([name, count], i) => (
+                  {topCountries.map(([name, count]) => (
                     <tr key={name} className="border-b border-slate-800/50 hover:bg-slate-800/30">
                       <td className="px-4 py-3 font-medium">{name}</td>
                       <td className="px-4 py-3 text-right">{count}</td>

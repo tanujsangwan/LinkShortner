@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Link, Check, Copy, Link as LinkIcon, BarChart3, Download, Zap } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import toast from 'react-hot-toast';
-import { createLink } from '../lib/api';
+import { createLink, getShortUrl } from '../lib/api';
 
 export default function Home() {
   const [url, setUrl] = useState('');
@@ -33,7 +33,7 @@ export default function Home() {
 
   const handleCopy = () => {
     if (result) {
-      navigator.clipboard.writeText(`http://localhost:8080/${result.alias}`);
+      navigator.clipboard.writeText(getShortUrl(result.alias));
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
       toast.success('Copied to clipboard!');
@@ -185,7 +185,7 @@ export default function Home() {
                 <div className="p-4 bg-white rounded-xl flex-shrink-0">
                   <QRCodeSVG
                     id="qr-code"
-                    value={`http://localhost:8080/${result.alias}`}
+                    value={getShortUrl(result.alias)}
                     size={128}
                     level="H"
                     includeMargin={true}
@@ -196,7 +196,7 @@ export default function Home() {
                     <input
                       type="text"
                       readOnly
-                      value={`http://localhost:8080/${result.alias}`}
+                      value={getShortUrl(result.alias)}
                       className="block w-full pr-12 pl-4 py-3 bg-slate-900/80 border border-slate-700 rounded-xl text-cyan-400 font-medium outline-none selection:bg-cyan-500/30"
                     />
                     <button

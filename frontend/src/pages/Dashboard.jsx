@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { Search, Copy, Check, BarChart3, Trash2, QrCode, X, Download } from 'lucide-react';
 import { QRCodeSVG } from 'qrcode.react';
 import toast from 'react-hot-toast';
-import { getLinks, deleteLink } from '../lib/api';
+import { getLinks, deleteLink, getShortUrl } from '../lib/api';
 
 export default function Dashboard() {
   const [links, setLinks] = useState([]);
@@ -42,7 +42,7 @@ export default function Dashboard() {
   };
 
   const handleCopy = (alias) => {
-    navigator.clipboard.writeText(`http://localhost:8080/${alias}`);
+    navigator.clipboard.writeText(getShortUrl(alias));
     setCopiedId(alias);
     setTimeout(() => setCopiedId(null), 2000);
     toast.success('Copied to clipboard');
@@ -129,12 +129,12 @@ export default function Dashboard() {
                   </h3>
                   <div className="flex items-center space-x-2 mt-4 bg-slate-900/50 p-2 rounded-lg border border-slate-700/50">
                     <a 
-                      href={`http://localhost:8080/${link.alias}`} 
+                      href={getShortUrl(link.alias)} 
                       target="_blank" 
                       rel="noreferrer"
                       className="text-cyan-400 font-medium truncate flex-grow hover:underline"
                     >
-                      localhost:8080/{link.alias}
+                      {getShortUrl(link.alias)}
                     </a>
                     <button onClick={() => handleCopy(link.alias)} className="p-1.5 text-slate-400 hover:text-white bg-slate-800 rounded-md">
                       {copiedId === link.alias ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
@@ -145,7 +145,7 @@ export default function Dashboard() {
                 <div className="mt-6 pt-4 border-t border-slate-800 flex items-center justify-between">
                   <div className="flex items-center text-slate-300 text-sm">
                     <BarChart3 className="w-4 h-4 mr-1.5 text-purple-400" />
-                    {link.clicks || 0} clicks
+                    {link.clickCount || 0} clicks
                   </div>
                   <div className="flex space-x-2">
                     <button 
@@ -197,7 +197,7 @@ export default function Dashboard() {
               <div className="bg-white p-4 rounded-xl flex justify-center mb-6">
                 <QRCodeSVG
                   id="modal-qr-code"
-                  value={`http://localhost:8080/${qrModal}`}
+                  value={getShortUrl(qrModal)}
                   size={256}
                   level="H"
                   includeMargin={true}

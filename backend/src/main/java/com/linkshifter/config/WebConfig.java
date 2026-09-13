@@ -8,14 +8,16 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class WebConfig implements WebMvcConfigurer {
 
+    // Supports comma-separated list of origins, e.g. "http://localhost:5173,https://linkshifter.vercel.app"
     @Value("${app.frontend.url}")
     private String frontendUrl;
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
+        String[] origins = frontendUrl.split(",");
         registry.addMapping("/**")
-                .allowedOrigins(frontendUrl)
-                .allowedMethods("*")
+                .allowedOrigins(origins)
+                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
                 .allowedHeaders("*")
                 .allowCredentials(true);
     }
